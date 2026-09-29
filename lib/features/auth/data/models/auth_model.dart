@@ -18,6 +18,7 @@ class AuthModel {
     refreshToken: json["refresh_token"],
   );
 
+  // esta funcionalidad no se ya que creo el mapper para esta opcion
   Map<String, dynamic> toJson() => {
     "token_type": tokenType,
     "expires_in": expiresIn,
