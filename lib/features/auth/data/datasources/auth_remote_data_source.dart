@@ -7,25 +7,24 @@ class AuthRemoteDataSource {
 
   new({required this.dio});
 
-  Future<AuthModel> login(String username,
-      String password,
-      String clientID,
-      String clientSecret,) async {
+  Future<AuthModel> login(
+    String username,
+    String password,
+    String clientID,
+    String clientSecret,
+  ) async {
     final response = await dio.post(
-        ApiConstanst.authUrl,
-        data: {
-          'grant_type': 'password',
-          'username': username,
-          'password': password,
-          'client_id': clientID,
-          'client_secret': password,
-        },
-        options: Options(
-            contentType: Headers.formUrlEncodedContentType,
-        )
+      ApiConstanst.authUrl,
+      data: {
+        'grant_type': 'password',
+        'username': username,
+        'password': password,
+        'client_id': clientID,
+        'client_secret': clientSecret,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
     );
 
     return AuthModel.fromJson(response.data);
-
   }
 }
