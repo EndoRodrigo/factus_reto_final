@@ -9,8 +9,8 @@ class AuthRepositoryImpl implements AuthRepository{
   new({required this.dataSource});
 
   @override
-  Future<Auth> login(String username, String password, String clientID, String clientSecret) async{
-    final model = await dataSource.login(username, password, clientID, clientSecret);
+  Future<Auth> login() async{
+    final model = await dataSource.login();
     return AuthMapper.toEntity(model);
   }
 

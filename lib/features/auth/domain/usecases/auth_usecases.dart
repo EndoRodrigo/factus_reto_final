@@ -6,7 +6,7 @@ class AuthUsecases {
 
   new({required this.repository});
 
-  Future<Auth> call(String username, String password, String clientID, String clientSecret,) {
-    return repository.login(username, password, clientID, clientSecret);
+  Future<Auth> call() {
+    return repository.login();
   }
 }

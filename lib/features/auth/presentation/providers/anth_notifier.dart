@@ -12,21 +12,11 @@ class AuthNotifier extends Notifier<AuthState> {
     return const AuthState();
   }
 
-  Future<void> login({
-    required String username,
-    required String password,
-    required String clientId,
-    required String clientSecret,
-  }) async {
+  Future<void> login() async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final auth = await _authUseCase(
-        username,
-        password,
-        clientId,
-        clientSecret,
-      );
+      final auth = await _authUseCase();
 
       state = state.copyWith(isLoading: false, auth: auth);
     } catch (e) {
