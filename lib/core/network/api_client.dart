@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:factus_reto_final/core/constants/api_constanst.dart';
+import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiClient {
   late final Dio dio;
@@ -13,5 +15,19 @@ class ApiClient {
         headers: {'Accept': 'application/json'},
       ),
     );
+
+    if (kDebugMode) {
+      dio.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90,
+        ),
+      );
+    }
   }
 }

@@ -38,6 +38,7 @@ dependencies:
   http: ^1.6.0
   dio: ^5.11.1
   flutter_riverpod: ^3.4.3
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
