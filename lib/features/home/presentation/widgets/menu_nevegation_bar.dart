@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 
 class MenuNevegationBar extends StatefulWidget {
-  const MenuNevegationBar({super.key});
+  final int indexMenu;
+  final ValueChanged<int> onIndexChanged;
+
+  const MenuNevegationBar({super.key, required this.indexMenu, required this.onIndexChanged});
 
   @override
   State<MenuNevegationBar> createState() => _MenuNevegationBarState();
 }
 
 class _MenuNevegationBarState extends State<MenuNevegationBar> {
-
-  int _indexMenu = 0;
   @override
   Widget build(BuildContext context) {
 
     return NavigationBar(
-      selectedIndex: _indexMenu,
-      onDestinationSelected: (index) {
-        _indexMenu = index;
-        setState(() {});
-      },
+      selectedIndex: widget.indexMenu,
+      onDestinationSelected: widget.onIndexChanged,
       destinations:  const <Widget> [
         _CustomeNavegation(icon: Icons.home, label: 'Home'),
         _CustomeNavegation(icon: Icons.add, label: 'Mas'),

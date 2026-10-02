@@ -16,7 +16,7 @@ class AuthPage extends ConsumerWidget {
       if (previous?.auth == null && next.auth != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
 
