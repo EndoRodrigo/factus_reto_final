@@ -16,6 +16,7 @@ class ApiClient {
       ),
     );
 
+    // Muestar el detalle de las peticiones en el log
     if (kDebugMode) {
       dio.interceptors.add(
         PrettyDioLogger(
