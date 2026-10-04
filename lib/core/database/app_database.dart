@@ -18,18 +18,18 @@ class AppDatabase {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE items(
+      CREATE TABLE items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        codeReference TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
-        description TEXT,
-        code TEXT,
+        quantity REAL NOT NULL DEFAULT 1,
+        discountRate REAL NOT NULL DEFAULT 0,
         price REAL NOT NULL,
-        taxRate REAL NOT NULL DEFAULT 0,
-        unit TEXT NOT NULL DEFAULT 'UND',
-        isActive INTEGER NOT NULL DEFAULT 1,
+        unitMeasureCode TEXT NOT NULL,
+        standardCode TEXT NOT NULL,
         createdAt TEXT NOT NULL,
         updatedAt TEXT
-      )
+      );
       ''');
   }
 
