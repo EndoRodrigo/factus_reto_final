@@ -1,9 +1,9 @@
 import 'package:factus_reto_final/features/product/domain/repositories/item_repository.dart';
 
-class CreateProductUseCase {
+class CreateItemUsecase {
   final ItemRepository repository;
 
-  CreateProductUseCase(this.repository);
+  CreateItemUsecase({required this.repository});
 
   Future<int> call({
     required String codeReference,
