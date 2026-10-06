@@ -78,7 +78,20 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
           content: Text('Producto creado correctamente'),
         ),
       );
-      Navigator.pop(context, true);
+
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context, true);
+      } else {
+        // Limpiar formulario si está embebido como pestaña
+        _nameController.clear();
+        _codeController.clear();
+        _priceController.clear();
+        _quantityController.text = '1';
+        _discountController.text = '0';
+        _unitMeasureCodeController.text = '94';
+        _standardCodeController.text = '999';
+        _formKey.currentState?.reset();
+      }
     } else {
       final state = ref.read(itemNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
