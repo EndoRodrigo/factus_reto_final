@@ -17,9 +17,9 @@ class _MenuNevegationBarState extends State<MenuNevegationBar> {
     return NavigationBar(
       selectedIndex: widget.indexMenu,
       onDestinationSelected: widget.onIndexChanged,
-      destinations:  const <Widget> [
+      destinations: const <Widget>[
         _CustomeNavegation(icon: Icons.home, label: 'Home'),
-        _CustomeNavegation(icon: Icons.add, label: 'Mas'),
+        _CustomeNavegation(icon: Icons.inventory_2_outlined, label: 'Productos'),
       ],
     );
   }
@@ -29,7 +29,7 @@ class _CustomeNavegation extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const new({super.key, required this.icon, required this.label});
+  const _CustomeNavegation({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {

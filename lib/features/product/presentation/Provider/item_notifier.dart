@@ -32,10 +32,12 @@ class ItemNotifier extends Notifier<ItemState> {
         unitMeasureCode: unitMeasureCode,
         standardCode: standardCode,
       );
+      state = state.copyWith(isLoading: false);
+      return true;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
     }
-    return false;
   }
 }
 

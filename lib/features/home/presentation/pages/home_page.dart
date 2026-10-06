@@ -1,12 +1,13 @@
 import 'package:factus_reto_final/features/home/presentation/widgets/menu_app_bar.dart';
 import 'package:factus_reto_final/features/home/presentation/widgets/menu_nevegation_bar.dart';
+import 'package:factus_reto_final/features/product/presentation/pages/item_from_page.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/action_card.dart';
 import '../widgets/bashboard_card.dart';
 
 class HomePage extends StatefulWidget {
-  new({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,16 +17,15 @@ class _HomePageState extends State<HomePage> {
   int indexMenu = 0;
 
   final List<Widget> pages = const [
-    Center(child: Text('Factus')),
-    //InvoicesPage(),
-    Center(child: Text('Crear factura')),
+    _HomeDashboard(),
+    ProductFormPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MenuAppBar(),
-      body: _HomeDashboard(),
+      body: pages[indexMenu],
       bottomNavigationBar: MenuNevegationBar(
         indexMenu: indexMenu,
         onIndexChanged: (index) {
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeDashboard extends StatelessWidget {
-  const _HomeDashboard({super.key});
+  const _HomeDashboard();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,6 @@ class _HomeDashboard extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '¡Bienvenido! 👋',
@@ -71,9 +70,9 @@ class _HomeDashboard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Gestiona tu facturación electrónica '
-                      'de forma sencilla.',
+                  'de forma sencilla.',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -138,13 +137,18 @@ class _HomeDashboard extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // Crear factura
+          // Crear producto
           ActionCard(
-            icon: Icons.add_circle_outline,
-            title: 'Crear factura',
-            subtitle: 'Genera una nueva factura electrónica',
+            icon: Icons.inventory_2_outlined,
+            title: 'Crear producto',
+            subtitle: 'Registra un nuevo producto o ítem para facturar',
             onTap: () {
-              // Acción para crear factura
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductFormPage(),
+                ),
+              );
             },
           ),
         ],

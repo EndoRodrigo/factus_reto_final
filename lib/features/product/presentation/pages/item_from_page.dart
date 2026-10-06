@@ -1,4 +1,3 @@
-import 'package:factus_reto_final/features/product/domain/entities/item.dart';
 import 'package:factus_reto_final/features/product/presentation/Provider/item_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,27 +19,15 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   final _nameController = TextEditingController();
   final _codeController = TextEditingController();
   final _priceController = TextEditingController();
-  final _quantityController = TextEditingController();
-  final _discountController = TextEditingController();
+  final _quantityController = TextEditingController(text: '1');
+  final _discountController = TextEditingController(text: '0');
   final _unitMeasureCodeController = TextEditingController(text: '94');
   final _standardCodeController = TextEditingController(text: '999');
 
-  bool _isActive = true;
-  bool _loadingProduct = false;
-
-  void _fillForm(Item product) {
-    _codeController.text = product.codeReference;
-    _nameController.text = product.name;
-    _priceController.text = product.price;
-    _quantityController.text = product.quantity;
-    _discountController.text = product.discountRate;
-    _unitMeasureCodeController.text = product.unitMeasureCode;
-    _standardCodeController.text = product.standardCode;
-  }
+  final bool _loadingProduct = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -53,7 +40,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
     _discountController.dispose();
     _unitMeasureCodeController.dispose();
     _standardCodeController.dispose();
-
     super.dispose();
   }
 
@@ -72,31 +58,15 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
     final notifier = ref.read(itemNotifierProvider.notifier);
 
-    bool success;
-
-    if (widget.isEditing) {
-      success = await notifier.updateProduct(
-        id: widget.productId!,
-        name: name,
-        code: code,
-        price: price,
-        taxRate: taxRate,
-        description: description.isEmpty ? null : description,
-        unitMeasureCode: unitMeasureCode,
-        standardCode: standardCode,
-        isActive: _isActive,
-      );
-    } else {
-      success = await notifier.createProduct(
-        name: name,
-        code: code,
-        price: price,
-        taxRate: taxRate,
-        description: description.isEmpty ? null : description,
-        unitMeasureCode: unitMeasureCode,
-        standardCode: standardCode,
-      );
-    }
+    bool success = await notifier.itemCreate(
+      codeReference: code,
+      name: name,
+      quantity: quantity,
+      discountRate: discount,
+      price: price,
+      unitMeasureCode: unitMeasureCode,
+      standardCode: standardCode,
+    );
 
     if (!mounted) {
       return;
@@ -104,28 +74,22 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            widget.isEditing
-                ? 'Producto actualizado correctamente'
-                : 'Producto creado correctamente',
-          ),
+        const SnackBar(
+          content: Text('Producto creado correctamente'),
         ),
       );
-
       Navigator.pop(context, true);
     } else {
-      final error = ref.read(productNotifierProvider).error;
-
+      final state = ref.read(itemNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error ?? 'No se pudo guardar el producto')),
+        SnackBar(content: Text(state.error ?? 'No se pudo guardar el producto')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(productNotifierProvider);
+    final state = ref.watch(itemNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -155,7 +119,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       if (value == null || value.trim().isEmpty) {
                         return 'Ingresa el nombre del producto';
                       }
-
                       return null;
                     },
                   ),
@@ -164,7 +127,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                     controller: _codeController,
                     textCapitalization: TextCapitalization.characters,
                     decoration: const InputDecoration(
-                      labelText: 'Código',
+                      labelText: 'Código de referencia',
                       hintText: 'Ej. CAM-001',
                       prefixIcon: Icon(Icons.qr_code_2_outlined),
                       border: OutlineInputBorder(),
@@ -173,7 +136,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       if (value == null || value.trim().isEmpty) {
                         return 'Ingresa el código del producto';
                       }
-
                       return null;
                     },
                   ),
@@ -196,13 +158,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                             if (value == null || value.trim().isEmpty) {
                               return 'Ingresa el precio';
                             }
-
                             final price = double.tryParse(value);
-
                             if (price == null || price <= 0) {
                               return 'Ingresa un precio válido';
                             }
-
                             return null;
                           },
                         ),
@@ -210,29 +169,53 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: TextFormField(
-                          controller: _taxRateController,
+                          controller: _quantityController,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
                           decoration: const InputDecoration(
-                            labelText: 'IVA (%)',
-                            hintText: 'Ej. 19',
+                            labelText: 'Cantidad',
+                            hintText: 'Ej. 1',
+                            prefixIcon: Icon(Icons.numbers),
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Ingresa la cantidad';
+                            }
+                            final qty = double.tryParse(value);
+                            if (qty == null || qty < 0) {
+                              return 'Ingresa una cantidad válida';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _discountController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Descuento (%)',
+                            hintText: 'Ej. 0',
                             prefixIcon: Icon(Icons.percent),
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Ingresa el IVA';
+                              return 'Ingresa el descuento';
                             }
-
-                            final taxRate = double.tryParse(value);
-
-                            if (taxRate == null ||
-                                taxRate < 0 ||
-                                taxRate > 100) {
-                              return 'Ingresa un IVA entre 0 y 100';
+                            final discount = double.tryParse(value);
+                            if (discount == null || discount < 0 || discount > 100) {
+                              return 'Descuento entre 0 y 100';
                             }
-
                             return null;
                           },
                         ),
@@ -279,47 +262,18 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _descriptionController,
-                    maxLines: 3,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Descripción',
-                      hintText: 'Descripción opcional del producto',
-                      prefixIcon: Icon(Icons.description_outlined),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  if (widget.isEditing) ...[
-                    const SizedBox(height: 8),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Producto activo'),
-                      subtitle: const Text(
-                        'Los productos inactivos no se '
-                        'mostrarán para nuevas facturas.',
-                      ),
-                      value: _isActive,
-                      onChanged: (value) {
-                        setState(() {
-                          _isActive = value;
-                        });
-                      },
-                    ),
-                  ],
                   const SizedBox(height: 32),
                   SizedBox(
                     height: 52,
                     child: FilledButton.icon(
                       onPressed: state.isLoading ? null : _saveProduct,
                       icon: state.isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.save_outlined),
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.save_outlined),
                       label: Text(
                         widget.isEditing ? 'Guardar cambios' : 'Crear producto',
                       ),
