@@ -30,10 +30,16 @@ class ItemLocalDataSource {
     });
   }
 
-  // READ: Get all items from SQLite
-  Future<List<Map<String, dynamic>>> getItems() async {
+  // READ: Get all items from SQLite as Maps
+  Future<List<Map<String, dynamic>>> getItems({int limit = 20, int offset = 0}) async {
     final db = await _appDatabase.database;
-    return await db.query('items', orderBy: 'id DESC');
+
+    return await db.query(
+      'items',
+      orderBy: 'id DESC',
+      limit: limit,
+      offset: offset,
+    );
   }
 
   // READ: Get item by ID
@@ -82,10 +88,6 @@ class ItemLocalDataSource {
   // DELETE: Delete item by ID
   Future<int> deleteItem(int id) async {
     final db = await _appDatabase.database;
-    return await db.delete(
-      'items',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('items', where: 'id = ?', whereArgs: [id]);
   }
 }
