@@ -12,7 +12,7 @@ class ItemNotifier extends Notifier<ItemState> {
   ItemState build() {
     _createItemUseCase = ref.watch(itemUseCasesProvider);
     _getItemsUseCase = ref.watch(getItemsUseCaseProvider);
-    loadItems();
+    Future.microtask(() => loadItems());
     return ItemState();
   }
 
