@@ -2,18 +2,18 @@ import 'package:factus_reto_final/features/product/presentation/Provider/item_no
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductFormPage extends ConsumerStatefulWidget {
+class ItemFromPage extends ConsumerStatefulWidget {
   final int? productId;
 
-  const ProductFormPage({super.key, this.productId});
+  const ItemFromPage({super.key, this.productId});
 
   bool get isEditing => productId != null;
 
   @override
-  ConsumerState<ProductFormPage> createState() => _ProductFormPageState();
+  ConsumerState<ItemFromPage> createState() => _ProductFormPageState();
 }
 
-class _ProductFormPageState extends ConsumerState<ProductFormPage> {
+class _ProductFormPageState extends ConsumerState<ItemFromPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();

@@ -3,6 +3,7 @@ import 'package:factus_reto_final/features/home/presentation/widgets/menu_nevega
 import 'package:factus_reto_final/features/product/presentation/pages/item_from_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../../product/presentation/pages/item_page.dart';
 import '../widgets/action_card.dart';
 import '../widgets/bashboard_card.dart';
 
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> pages = const [
     _HomeDashboard(),
-    ProductFormPage(),
+    ItemPage(),
   ];
 
   @override
@@ -146,7 +147,7 @@ class _HomeDashboard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProductFormPage(),
+                  builder: (context) => const ItemPage(),
                 ),
               );
             },
