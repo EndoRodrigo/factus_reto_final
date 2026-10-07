@@ -1,11 +1,12 @@
 import 'package:factus_reto_final/features/product/data/datasources/item_local_data_source.dart';
+import 'package:factus_reto_final/features/product/data/mappers/item_mapper.dart';
 import 'package:factus_reto_final/features/product/domain/entities/item.dart';
 import 'package:factus_reto_final/features/product/domain/repositories/item_repository.dart';
 
 class ItemRepositoryImpl implements ItemRepository {
   final ItemLocalDataSource dataSource;
 
-  new({required this.dataSource});
+  ItemRepositoryImpl({required this.dataSource});
 
   @override
   Future<int> createItem({
@@ -16,34 +17,35 @@ class ItemRepositoryImpl implements ItemRepository {
     required double price,
     required String unitMeasureCode,
     required String standardCode,
-  }) async{
+  }) async {
     return await dataSource.addItem(
-        codeReference: codeReference,
-        name: name,
-        quantity: quantity,
-        discountRate: discountRate,
-        price: price,
-        unitMeasureCode: unitMeasureCode,
-        standardCode: standardCode
+      codeReference: codeReference,
+      name: name,
+      quantity: quantity,
+      discountRate: discountRate,
+      price: price,
+      unitMeasureCode: unitMeasureCode,
+      standardCode: standardCode,
     );
   }
 
   @override
-  Future<bool> deleteItem(int id) {
-    // TODO: implement deleteItem
-    throw UnimplementedError();
+  Future<bool> deleteItem(int id) async {
+    final result = await dataSource.deleteItem(id);
+    return result > 0;
   }
 
   @override
-  Future<Item?> getItemById(int id) {
-    // TODO: implement getItemById
-    throw UnimplementedError();
+  Future<Item?> getItemById(int id) async {
+    final map = await dataSource.getItemById(id);
+    if (map == null) return null;
+    return ItemMapper.toEntity(map);
   }
 
   @override
-  Future<List<Item>> getItems() {
-    // TODO: implement getItems
-    throw UnimplementedError();
+  Future<List<Item>> getItems() async {
+    final maps = await dataSource.getItems();
+    return maps.map((map) => ItemMapper.toEntity(map)).toList();
   }
 
   @override
@@ -56,8 +58,17 @@ class ItemRepositoryImpl implements ItemRepository {
     required double price,
     required String unitMeasureCode,
     required String standardCode,
-  }) {
-    // TODO: implement updateItem
-    throw UnimplementedError();
+  }) async {
+    final result = await dataSource.updateItem(
+      id: id,
+      codeReference: codeReference,
+      name: name,
+      quantity: quantity,
+      discountRate: discountRate,
+      price: price,
+      unitMeasureCode: unitMeasureCode,
+      standardCode: standardCode,
+    );
+    return result > 0;
   }
 }
