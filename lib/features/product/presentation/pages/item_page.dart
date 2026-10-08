@@ -37,7 +37,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
   Future<void> _openEditProduct(int productId) async {
     final update = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => const ItemFromPage()),
+      MaterialPageRoute(builder: (_) => ItemFromPage(productId: productId,)),
     );
 
     if (update == true && mounted) {
@@ -111,10 +111,11 @@ class _ItemPageState extends ConsumerState<ItemPage> {
         separatorBuilder: (_, __) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
           final item = state.items[index];
-
+          print('Numero del producto ${item.id}');
           return ItemCard(
-            item: item,
-            onEdit: () => _openEditProduct(item.id!),
+              item: item,
+              onEdit: () => _openEditProduct(item.id!),
+
             //onDelete: () => ref.read(itemNotifierProvider.notifier).deleteItem(item.id),
           );
         },
@@ -132,7 +133,10 @@ class _ItemPageState extends ConsumerState<ItemPage> {
             Icon(
               Icons.inventory_2_outlined,
               size: 72,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme
+                  .of(context)
+                  .colorScheme
+                  .primary,
             ),
             const SizedBox(height: 20),
             const Text(
