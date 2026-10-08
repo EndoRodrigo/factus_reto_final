@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Provider/item_state.dart';
+import '../widgets/item_card.dart';
 
 class ItemPage extends ConsumerStatefulWidget {
   const ItemPage({super.key});
@@ -25,12 +26,21 @@ class _ItemPageState extends ConsumerState<ItemPage> {
   Future<void> _openCreateProduct() async {
     final created = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => const ItemFromPage(),
-      ),
+      MaterialPageRoute(builder: (_) => const ItemFromPage()),
     );
 
     if (created == true && mounted) {
+      ref.read(itemNotifierProvider.notifier).loadItems();
+    }
+  }
+
+  Future<void> _openEditProduct(int productId) async {
+    final update = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const ItemFromPage()),
+    );
+
+    if (update == true && mounted) {
       ref.read(itemNotifierProvider.notifier).loadItems();
     }
   }
@@ -43,9 +53,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
       appBar: AppBar(
         title: const Text(
           'Mis Items',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -62,9 +70,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
 
   Widget _buildBody(ItemState state) {
     if (state.isLoading && state.items.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (state.error != null && state.items.isEmpty) {
@@ -74,15 +80,9 @@ class _ItemPageState extends ConsumerState<ItemPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 48,
-              ),
+              const Icon(Icons.error_outline, size: 48),
               const SizedBox(height: 16),
-              Text(
-                state.error!,
-                textAlign: TextAlign.center,
-              ),
+              Text(state.error!, textAlign: TextAlign.center),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () {
@@ -112,32 +112,10 @@ class _ItemPageState extends ConsumerState<ItemPage> {
         itemBuilder: (context, index) {
           final item = state.items[index];
 
-          return Card(
-            elevation: 1,
-            child: ListTile(
-              leading: CircleAvatar(
-                child: Text(
-                  item.name.isNotEmpty
-                      ? item.name[0].toUpperCase()
-                      : '?',
-                ),
-              ),
-              title: Text(
-                item.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                'Código: ${item.standardCode}',
-              ),
-              trailing: Text(
-                '\$${item.price}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          return ItemCard(
+            item: item,
+            onEdit: () => _openEditProduct(item.id!),
+            //onDelete: () => ref.read(itemNotifierProvider.notifier).deleteItem(item.id),
           );
         },
       ),
@@ -159,10 +137,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
             const SizedBox(height: 20),
             const Text(
               'No tienes items registrados',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             const Text(
