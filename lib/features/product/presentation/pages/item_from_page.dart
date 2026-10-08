@@ -2,12 +2,14 @@ import 'package:factus_reto_final/features/product/presentation/Provider/item_no
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/item.dart';
+
 class ItemFromPage extends ConsumerStatefulWidget {
-  final int? productId;
+  final Item? item;
 
-  const ItemFromPage({super.key, this.productId});
+  const ItemFromPage({super.key, this.item});
 
-  bool get isEditing => productId != null;
+  bool get isEditing => item?.id != null;
 
   @override
   ConsumerState<ItemFromPage> createState() => _ProductFormPageState();
@@ -29,6 +31,16 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
   @override
   void initState() {
     super.initState();
+    if(widget.isEditing){
+      _nameController.text = widget.item!.name;
+      _codeController.text = widget.item!.codeReference;
+      _priceController.text = widget.item!.price;
+      _quantityController.text = widget.item!.quantity;
+      _discountController.text = widget.item!.discountRate;
+      _unitMeasureCodeController.text = widget.item!.unitMeasureCode;
+      _standardCodeController.text = widget.item!.standardCode;
+    }
+
   }
 
   @override
@@ -120,7 +132,7 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
                 padding: const EdgeInsets.all(20),
                 children: [
                   TextFormField(
-                    controller: _nameController,
+                    controller:_nameController,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: const InputDecoration(
                       labelText: 'Nombre del producto',

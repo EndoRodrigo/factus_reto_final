@@ -3,6 +3,7 @@ import 'package:factus_reto_final/features/product/presentation/pages/item_from_
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/item.dart';
 import '../Provider/item_state.dart';
 import '../widgets/item_card.dart';
 
@@ -34,10 +35,10 @@ class _ItemPageState extends ConsumerState<ItemPage> {
     }
   }
 
-  Future<void> _openEditProduct(int productId) async {
+  Future<void> _openEditProduct(Item item) async {
     final update = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => ItemFromPage(productId: productId,)),
+      MaterialPageRoute(builder: (_) => ItemFromPage(item: item,)),
     );
 
     if (update == true && mounted) {
@@ -114,7 +115,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
           print('Numero del producto ${item.id}');
           return ItemCard(
               item: item,
-              onEdit: () => _openEditProduct(item.id!),
+              onEdit: () => _openEditProduct(item),
 
             //onDelete: () => ref.read(itemNotifierProvider.notifier).deleteItem(item.id),
           );
