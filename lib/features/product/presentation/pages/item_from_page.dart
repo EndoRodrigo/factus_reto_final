@@ -11,6 +11,7 @@ class ItemFromPage extends ConsumerStatefulWidget {
 
   bool get isEditing => item?.id != null;
 
+
   @override
   ConsumerState<ItemFromPage> createState() => _ProductFormPageState();
 }
@@ -27,20 +28,21 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
   final _standardCodeController = TextEditingController(text: '999');
 
   final bool _loadingProduct = false;
+  late bool success;
 
   @override
   void initState() {
     super.initState();
-    if(widget.isEditing){
+    if (widget.isEditing) {
       _nameController.text = widget.item!.name;
       _codeController.text = widget.item!.codeReference;
-      _priceController.text = widget.item!.price;
-      _quantityController.text = widget.item!.quantity;
-      _discountController.text = widget.item!.discountRate;
+      _priceController.text = widget.item!.price.toString();
+      _quantityController.text = widget.item!.quantity.toString();
+      _discountController.text = widget.item!.discountRate.toString();
       _unitMeasureCodeController.text = widget.item!.unitMeasureCode;
       _standardCodeController.text = widget.item!.standardCode;
     }
-
+    success = false;
   }
 
   @override
@@ -70,15 +72,30 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
 
     final notifier = ref.read(itemNotifierProvider.notifier);
 
-    bool success = await notifier.itemCreate(
-      codeReference: code,
-      name: name,
-      quantity: quantity,
-      discountRate: discount,
-      price: price,
-      unitMeasureCode: unitMeasureCode,
-      standardCode: standardCode,
-    );
+    if (widget.isEditing) {
+       success = await notifier.itemUpdate(
+        Item(
+          id: widget.item?.id,
+          codeReference: widget.item!.codeReference,
+          name: widget.item!.name,
+          quantity: widget.item!.quantity,
+          discountRate: widget.item!.discountRate,
+          price: widget.item!.price,
+          unitMeasureCode: widget.item!.unitMeasureCode,
+          standardCode: widget.item!.standardCode,
+        ),
+      );
+    } else {
+       success = await notifier.itemCreate(
+        codeReference: code,
+        name: name,
+        quantity: quantity,
+        discountRate: discount,
+        price: price,
+        unitMeasureCode: unitMeasureCode,
+        standardCode: standardCode,
+      );
+    }
 
     if (!mounted) {
       return;
@@ -86,9 +103,7 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Producto creado correctamente'),
-        ),
+        const SnackBar(content: Text('Producto creado correctamente')),
       );
 
       if (Navigator.canPop(context)) {
@@ -107,7 +122,9 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
     } else {
       final state = ref.read(itemNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.error ?? 'No se pudo guardar el producto')),
+        SnackBar(
+          content: Text(state.error ?? 'No se pudo guardar el producto'),
+        ),
       );
     }
   }
@@ -132,7 +149,7 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
                 padding: const EdgeInsets.all(20),
                 children: [
                   TextFormField(
-                    controller:_nameController,
+                    controller: _nameController,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: const InputDecoration(
                       labelText: 'Nombre del producto',
@@ -238,7 +255,9 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
                               return 'Ingresa el descuento';
                             }
                             final discount = double.tryParse(value);
-                            if (discount == null || discount < 0 || discount > 100) {
+                            if (discount == null ||
+                                discount < 0 ||
+                                discount > 100) {
                               return 'Descuento entre 0 y 100';
                             }
                             return null;
@@ -293,12 +312,12 @@ class _ProductFormPageState extends ConsumerState<ItemFromPage> {
                     child: FilledButton.icon(
                       onPressed: state.isLoading ? null : _saveProduct,
                       icon: state.isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.save_outlined),
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.save_outlined),
                       label: Text(
                         widget.isEditing ? 'Guardar cambios' : 'Crear producto',
                       ),

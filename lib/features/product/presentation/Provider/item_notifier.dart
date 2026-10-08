@@ -1,17 +1,22 @@
+import 'package:factus_reto_final/features/product/domain/entities/item.dart';
 import 'package:factus_reto_final/features/product/domain/usecases/create_item_usecase.dart';
 import 'package:factus_reto_final/features/product/domain/usecases/get_items_usecase.dart';
+import 'package:factus_reto_final/features/product/domain/usecases/update_item_usecase.dart';
 import 'package:factus_reto_final/features/product/presentation/Provider/item_provider.dart';
 import 'package:factus_reto_final/features/product/presentation/Provider/item_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod/src/framework.dart';
 
 class ItemNotifier extends Notifier<ItemState> {
   late final CreateItemUsecase _createItemUseCase;
+  late final UpdateItemUsecase _UpdateItemUseCase;
   late final GetItemsUsecase _getItemsUseCase;
 
   @override
   ItemState build() {
-    _createItemUseCase = ref.watch(itemUseCasesProvider);
+    _createItemUseCase = ref.watch(itemCreateUseCasesProvider);
     _getItemsUseCase = ref.watch(getItemsUseCaseProvider);
+    _UpdateItemUseCase = ref.watch(itemUpdateUseCasesProvider);
     Future.microtask(() => loadItems());
     return ItemState();
   }
@@ -46,6 +51,18 @@ class ItemNotifier extends Notifier<ItemState> {
         unitMeasureCode: unitMeasureCode,
         standardCode: standardCode,
       );
+      await loadItems();
+      return true;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> itemUpdate(Item item) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      await _UpdateItemUseCase(item: item);
       await loadItems();
       return true;
     } catch (e) {

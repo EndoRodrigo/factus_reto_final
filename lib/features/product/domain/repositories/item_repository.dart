@@ -15,16 +15,7 @@ abstract class ItemRepository {
     required String standardCode,
   });
 
-  Future<bool> updateItem({
-    required int id,
-    required String codeReference,
-    required String name,
-    required double quantity,
-    required double discountRate,
-    required double price,
-    required String unitMeasureCode,
-    required String standardCode,
-  });
+  Future<bool> updateItem({required Item item});
 
   Future<bool> deleteItem(int id);
 }

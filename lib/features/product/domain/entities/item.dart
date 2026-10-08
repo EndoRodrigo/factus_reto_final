@@ -2,9 +2,9 @@ class Item {
   final int? id;
   final String codeReference;
   final String name;
-  final String quantity;
-  final String discountRate;
-  final String price;
+  final double quantity;
+  final double discountRate;
+  final double price;
   final String unitMeasureCode;
   final String standardCode;
 

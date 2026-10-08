@@ -49,25 +49,16 @@ class ItemRepositoryImpl implements ItemRepository {
   }
 
   @override
-  Future<bool> updateItem({
-    required int id,
-    required String codeReference,
-    required String name,
-    required double quantity,
-    required double discountRate,
-    required double price,
-    required String unitMeasureCode,
-    required String standardCode,
-  }) async {
+  Future<bool> updateItem({required Item item}) async {
     final result = await dataSource.updateItem(
-      id: id,
-      codeReference: codeReference,
-      name: name,
-      quantity: quantity,
-      discountRate: discountRate,
-      price: price,
-      unitMeasureCode: unitMeasureCode,
-      standardCode: standardCode,
+      id: item.id!,
+      codeReference: item.codeReference,
+      name: item.name,
+      quantity: item.quantity,
+      discountRate: item.discountRate,
+      price: item.price,
+      unitMeasureCode: item.unitMeasureCode,
+      standardCode: item.standardCode,
     );
     return result > 0;
   }
