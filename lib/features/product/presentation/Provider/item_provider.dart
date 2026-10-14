@@ -6,6 +6,8 @@ import 'package:factus_reto_final/features/product/domain/usecases/get_items_use
 import 'package:factus_reto_final/features/product/domain/usecases/update_item_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/usecases/delete_item_usecase.dart';
+
 final dataBaseProvider = Provider((ref) {
   return AppDatabase();
 });
@@ -29,6 +31,12 @@ final itemUpdateUseCasesProvider = Provider((ref) {
   final repository = ref.watch(itemRepositoryProvider);
   return UpdateItemUsecase(repository: repository);
 });
+
+final itemDeleteUseCasesProvider = Provider((ref) {
+  final repository = ref.watch(itemRepositoryProvider);
+  return DeleteItemUsecase(repository: repository);
+});
+
 
 final getItemsUseCaseProvider = Provider((ref) {
   final repository = ref.watch(itemRepositoryProvider);

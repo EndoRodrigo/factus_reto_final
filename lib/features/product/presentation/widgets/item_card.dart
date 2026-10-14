@@ -5,13 +5,13 @@ import '../../domain/entities/item.dart';
 class ItemCard extends StatelessWidget {
   final Item item;
   final VoidCallback onEdit;
-  //final VoidCallback onDelete;
+  final VoidCallback onDelete;
 
   const ItemCard({
     super.key,
     required this.item,
     required this.onEdit,
-    //required this.onDelete,
+    required this.onDelete,
   });
 
   @override
@@ -54,7 +54,7 @@ class ItemCard extends StatelessWidget {
                     onEdit();
                     break;
                   case 'delete':
-                    //onDelete();
+                    onDelete();
                     break;
                 }
               },
@@ -70,7 +70,7 @@ class ItemCard extends StatelessWidget {
                   value: 'delete',
                   child: ListTile(
                     leading: Icon(Icons.delete_outline),
-                    title: Text('Desactivar'),
+                    title: Text('Eliminar'),
                   ),
                 ),
               ],
