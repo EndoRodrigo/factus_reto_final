@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ItemNotifier extends Notifier<ItemState> {
   late final CreateItemUsecase _createItemUseCase;
-  late final UpdateItemUsecase _UpdateItemUseCase;
+  late final UpdateItemUsecase _updateItemUseCase;
   late final GetItemsUsecase _getItemsUseCase;
   late final DeleteItemUsecase _deleteItemUseCase;
 
@@ -17,7 +17,7 @@ class ItemNotifier extends Notifier<ItemState> {
   ItemState build() {
     _createItemUseCase = ref.watch(itemCreateUseCasesProvider);
     _getItemsUseCase = ref.watch(getItemsUseCaseProvider);
-    _UpdateItemUseCase = ref.watch(itemUpdateUseCasesProvider);
+    _updateItemUseCase = ref.watch(itemUpdateUseCasesProvider);
     _deleteItemUseCase = ref.watch(itemDeleteUseCasesProvider);
     Future.microtask(() => loadItems());
     return ItemState();
@@ -64,7 +64,14 @@ class ItemNotifier extends Notifier<ItemState> {
   Future<bool> itemUpdate(Item item) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      await _UpdateItemUseCase(item: item);
+      final updated = await _updateItemUseCase(item: item);
+      if (!updated) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'No se pudo actualizar el producto en la base de datos',
+        );
+        return false;
+      }
       await loadItems();
       return true;
     } catch (e) {

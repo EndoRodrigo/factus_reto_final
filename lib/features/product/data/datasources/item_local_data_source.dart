@@ -67,7 +67,7 @@ class ItemLocalDataSource {
   }) async {
     final db = await _appDatabase.database;
     final now = DateTime.now().toIso8601String();
-
+    print('Inicia proceso de actualización');
     return await db.update(
       'items',
       {
