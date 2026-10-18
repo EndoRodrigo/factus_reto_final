@@ -15,10 +15,10 @@ class ItemPage extends ConsumerStatefulWidget {
 }
 
 class _ItemPageState extends ConsumerState<ItemPage> {
+
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() {
       ref.read(itemNotifierProvider.notifier).loadItems();
     });

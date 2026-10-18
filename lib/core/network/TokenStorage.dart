@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Tokenstorage {
+class TokenStorage {
   static const _accessToekn = 'accessToken';
   static const _refreshToekn = 'refreshToekn';
 

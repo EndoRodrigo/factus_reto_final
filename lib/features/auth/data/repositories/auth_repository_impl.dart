@@ -6,7 +6,7 @@ import 'package:factus_reto_final/features/auth/domain/repositories/auth_reposit
 
 class AuthRepositoryImpl implements AuthRepository{
   final AuthRemoteDataSource dataSource;
-  final Tokenstorage storege;
+  final TokenStorage storege;
 
   new({required this.dataSource, required this.storege});
 

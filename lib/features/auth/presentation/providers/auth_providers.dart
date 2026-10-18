@@ -7,8 +7,8 @@ import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
 
-final tokenStorageProvider = Provider<Tokenstorage>((ref) {
-  return Tokenstorage();
+final tokenStorageProvider = Provider<TokenStorage>((ref) {
+  return TokenStorage();
 });
 
 final apiClientProvider = Provider<ApiClient>((ref) {

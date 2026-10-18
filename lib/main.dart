@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'features/auth/presentation/pages/SplashScreen.dart';
+
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
   runApp(const ProviderScope(child: FactusApp()));
@@ -17,7 +19,7 @@ class FactusApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: AuthPage(),
+      home: const SplashScreen(),
     );
   }
 }
