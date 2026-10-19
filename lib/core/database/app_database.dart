@@ -13,9 +13,15 @@ class AppDatabase {
   Future<Database> _initDataDabe() async {
     final dataBasePath = await getDatabasesPath();
     final path = join(dataBasePath, 'factus.db');
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 
+  // Creacion de la base de datos: _onCreate
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE items (
@@ -31,9 +37,41 @@ class AppDatabase {
         updatedAt TEXT
       );
       ''');
+
+    await db.execute('''
+      CREATE TABLE Establisments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        nit TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        phone TEXT NOT NULL UNIQUE,
+        address TEXT NOT NULL,
+        municipalityCode TEXT NOT NULL,
+        municipalityName TEXT NOT NULL,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT
+      );
+    ''');
   }
 
-  //Implementacion onUpgrade: _onUpgrade
+  //Implementacion de cambios en la base de datos: _onUpgrade
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+        'CREATE TABLE Establisments '
+            '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
+            'name TEXT NOT NULL, '
+            'nit TEXT NOT NULL UNIQUE, '
+            'email TEXT NOT NULL UNIQUE, '
+            'phone TEXT NOT NULL UNIQUE, '
+            'address TEXT NOT NULL, '
+            'municipalityCode TEXT NOT NULL, '
+            'municipalityName TEXT NOT NULL, '
+            'createdAt TEXT NOT NULL, '
+            'updatedAt TEXT)',
+      );
+    }
+  }
 
   Future<Database> get database async {
     if (_database != null) {
