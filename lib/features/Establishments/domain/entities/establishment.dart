@@ -1,0 +1,23 @@
+class Establishment {
+  final int? id;
+  final String name;
+  final String nit;
+  final String email;
+  final String phone;
+  final String address;
+  final String municipalityCode;
+  final String municipalityName;
+  final String? createdAt;
+
+  const Establishment({
+    this.id,
+    required this.name,
+    required this.nit,
+    required this.email,
+    required this.phone,
+    required this.address,
+    required this.municipalityCode,
+    required this.municipalityName,
+    this.createdAt,
+  });
+}
