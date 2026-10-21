@@ -77,9 +77,7 @@ class AppDatabase {
     if (_database != null) {
       return _database!;
     }
-
     _database = await _initDataDabe();
-
     return _database!;
   }
 }
