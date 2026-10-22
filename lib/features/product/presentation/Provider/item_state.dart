@@ -6,7 +6,7 @@ class ItemState {
   final Item? selectItem;
   final String? error;
 
-  new({
+  ItemState({
     this.isLoading = false,
     this.items = const [],
     this.selectItem,
