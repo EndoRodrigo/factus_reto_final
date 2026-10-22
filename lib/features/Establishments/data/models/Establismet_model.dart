@@ -36,6 +36,7 @@ class EstablismetModel {
   }
   Map<String, dynamic> toMap() {
     return {
+      if (id != null) 'id': id,
       'name': name,
       'nit': nit,
       'email': email,
@@ -43,7 +44,7 @@ class EstablismetModel {
       'address': address,
       'municipalityCode': municipalityCode,
       'municipalityName': municipalityName,
-      'createdAt': DateTime.now().toIso8601String(),
+      'createdAt': createdAt ?? DateTime.now().toIso8601String(),
     };
   }
 }
