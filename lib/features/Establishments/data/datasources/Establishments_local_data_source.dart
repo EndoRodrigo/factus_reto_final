@@ -4,7 +4,7 @@ import '../models/Establismet_model.dart';
 class EstablishmentsLocalDataSource {
   final AppDatabase appDatabase;
 
-  new({required this.appDatabase});
+  EstablishmentsLocalDataSource({required this.appDatabase});
 
   Future<int> addEstablishment({
     required EstablismetModel establishment,
