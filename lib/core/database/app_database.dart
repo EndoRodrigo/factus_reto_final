@@ -39,7 +39,7 @@ class AppDatabase {
       ''');
 
     await db.execute('''
-      CREATE TABLE Establisments (
+      CREATE TABLE establishment (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         nit TEXT NOT NULL UNIQUE,
@@ -58,7 +58,7 @@ class AppDatabase {
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       await db.execute(
-        'CREATE TABLE Establisments '
+        'CREATE TABLE establishment '
             '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
             'name TEXT NOT NULL, '
             'nit TEXT NOT NULL UNIQUE, '
