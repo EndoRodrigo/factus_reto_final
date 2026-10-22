@@ -23,13 +23,15 @@ class EstablismetModel {
 
   factory EstablismetModel.fromMap(Map<String, dynamic> json) {
     return EstablismetModel(
-      name: json['name'],
-      nit: json['nit'],
-      email: json['email'],
-      phone: json['phone'],
-      address: json['address'],
-      municipalityCode: json['municipalityCode'],
-      municipalityName: json['municipalityName'],
+      id: json['id'] as int?,
+      name: json['name'] as String? ?? '',
+      nit: json['nit'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      municipalityCode: json['municipalityCode'] as String? ?? '',
+      municipalityName: json['municipalityName'] as String? ?? '',
+      createdAt: json['createdAt'] as String?,
     );
   }
   Map<String, dynamic> toMap() {
