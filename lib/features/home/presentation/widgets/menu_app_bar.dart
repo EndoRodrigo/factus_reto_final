@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../Establishments/presentation/pages/establithmet_pages.dart';
+
 class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const MenuAppBar({
@@ -27,9 +29,15 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Colors.grey.shade200,
-            child: const Icon(
-              Icons.person,
+            child: IconButton(
+              iconSize: 20,
               color: Colors.black87,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const EstablithmetPages()),
+                );
+              }, icon: const Icon(Icons.person),
             ),
           ),
         ),
