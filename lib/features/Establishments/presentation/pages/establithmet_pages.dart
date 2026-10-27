@@ -21,7 +21,7 @@ class _EstablithmetPagesState extends ConsumerState<EstablithmetPages> {
         child: Column(
           children: [
             ElevatedButton(onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const EstablistmestFormPages()))
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const EstablistmestFormPages()));
             }, child: const Text('Crear Establecimiento'))
           ],
         ),
