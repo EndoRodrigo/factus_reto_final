@@ -13,15 +13,9 @@ class AppDatabase {
   Future<Database> _initDataDabe() async {
     final dataBasePath = await getDatabasesPath();
     final path = join(dataBasePath, 'factus.db');
-    return await openDatabase(
-      path,
-      version: 2,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
+    return await openDatabase(path, version: 2, onUpgrade: _onUpgrade, onCreate: _onCreate);
   }
 
-  // Creacion de la base de datos: _onCreate
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE items (
@@ -77,7 +71,9 @@ class AppDatabase {
     if (_database != null) {
       return _database!;
     }
+
     _database = await _initDataDabe();
+
     return _database!;
   }
 }
