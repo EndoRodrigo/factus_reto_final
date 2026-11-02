@@ -5,7 +5,11 @@ class EstablishmestState {
   final List<Establishment> establishments;
   final String? error;
 
-  new({this.isLoading = false, this.establishments = const [], this.error});
+  const EstablishmestState({
+    this.isLoading = false,
+    this.establishments = const [],
+    this.error,
+  });
 
   EstablishmestState copyWith({
     bool? isLoading,

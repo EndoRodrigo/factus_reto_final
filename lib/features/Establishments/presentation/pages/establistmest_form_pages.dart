@@ -1,7 +1,9 @@
+import 'package:factus_reto_final/features/Establishments/domain/entities/establishment.dart';
 import 'package:factus_reto_final/features/Establishments/presentation/providers/establistme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../shared/build_filled_button.dart';
 import '../../../shared/build_municipaly_field.dart';
 import '../../../shared/build_text_field.dart';
 import '../providers/establishmest_state.dart';
@@ -16,7 +18,7 @@ class EstablistmestFormPages extends ConsumerStatefulWidget {
 
 class _EstablistmestFormPagesState
     extends ConsumerState<EstablistmestFormPages> {
-  final _fromKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _nitController = TextEditingController();
   final _emailController = TextEditingController();
@@ -24,6 +26,18 @@ class _EstablistmestFormPagesState
   final _addressController = TextEditingController();
   final _municipalityCodeController = TextEditingController();
   final _municipalityNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _nitController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _municipalityCodeController.dispose();
+    _municipalityNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +49,15 @@ class _EstablistmestFormPagesState
           isEdit ? 'Editar Establecimiento' : 'Nuevo Establecimiento',
         ),
       ),
-      body: _buildFrom(state),
+      body: _buildForm(state),
     );
   }
 
-  Widget _buildFrom(EstablishmestState establishment) {
+  Widget _buildForm(EstablishmestState state) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Form(
-        key: _fromKey,
+        key: _formKey,
         child: Column(
           children: [
             const Icon(Icons.business_outlined, size: 64),
@@ -84,10 +98,56 @@ class _EstablistmestFormPagesState
               label: 'Municipio',
               icon: Icons.location_city,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 32),
+            BuildFilledButton(
+              state: state,
+              onPressed: _save,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final establishment = Establishment(
+      name: _nameController.text.trim(),
+      nit: _nitController.text.trim(),
+      email: _emailController.text.trim(),
+      phone: _phoneController.text.trim(),
+      address: _addressController.text.trim(),
+      municipalityCode: _municipalityCodeController.text.trim(),
+      municipalityName: _municipalityNameController.text.trim(),
+      createdAt: DateTime.now().toIso8601String(),
+    );
+
+    final notifier = ref.read(establishmentNotifierProvider.notifier);
+    final success = await notifier.createEstablishment(
+      establishment: establishment,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Establecimiento guardado correctamente'),
+        ),
+      );
+      Navigator.pop(context, true);
+    } else {
+      final state = ref.read(establishmentNotifierProvider);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            state.error ?? 'No se pudo guardar el establecimiento',
+          ),
+        ),
+      );
+    }
   }
 }

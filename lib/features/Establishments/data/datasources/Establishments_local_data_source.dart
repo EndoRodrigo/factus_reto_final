@@ -10,7 +10,6 @@ class EstablishmentsLocalDataSource {
     required EstablismetModel establishment,
   }) async {
     final db = await appDatabase.database;
-    //final now = DateTime.now().toIso8601String();
-    return await db.insert('Establishments', establishment.toMap());
+    return await db.insert('establishment', establishment.toMap());
   }
 }
