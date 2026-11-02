@@ -1,10 +1,9 @@
-import 'package:factus_reto_final/features/Establishments/domain/entities/establishment.dart';
 import 'package:factus_reto_final/features/Establishments/presentation/providers/establistme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../shared/build_municipaly_field.dart';
 import '../../../shared/build_text_field.dart';
-import '../providers/establishmest_provider.dart';
 import '../providers/establishmest_state.dart';
 
 class EstablistmestFormPages extends ConsumerStatefulWidget {
@@ -77,6 +76,13 @@ class _EstablistmestFormPagesState
               controller: _addressController,
               label: 'Dirección',
               icon: Icons.location_on,
+            ),
+            const SizedBox(height: 10),
+            BuildMunicipalyField(
+              codeController: _municipalityCodeController,
+              nameController: _municipalityNameController,
+              label: 'Municipio',
+              icon: Icons.location_city,
             ),
             const SizedBox(height: 10),
           ],

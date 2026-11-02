@@ -5,7 +5,7 @@ class BuildTextField extends StatelessWidget {
   final String label;
   final IconData icon;
   final TextInputType? keyboardType;
-  final bool readOnly = false;
+  final bool readOnly;
   final VoidCallback? onTap;
 
   const BuildTextField({
@@ -13,6 +13,7 @@ class BuildTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     required this.icon,
+    this.readOnly = false,
     this.keyboardType,
     this.onTap,
   });
