@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/app_database.dart';
 import '../../data/repositories/Establismet_repository_implements.dart';
 import '../../domain/usecases/establishmest_use_case.dart';
+import '../../domain/usecases/get_establishmest_use_case.dart';
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
@@ -23,4 +24,10 @@ final estastablishmentsRepositoryProvider = Provider<EstablismetRepository>((ref
 final stablishmentsUseCaseProvider = Provider<EstablishmestUseCase>((ref) {
   final repository = ref.watch(estastablishmentsRepositoryProvider);
   return EstablishmestUseCase(repository: repository);
+});
+
+
+final getEstablishmenUseCaseProvider = Provider<GetEstablishmestUseCase>((ref){
+  final repository = ref.watch(estastablishmentsRepositoryProvider);
+  return GetEstablishmestUseCase(repository: repository);
 });
