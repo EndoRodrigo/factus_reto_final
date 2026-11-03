@@ -4,9 +4,14 @@ import '../entities/establishment.dart';
 
 class EstablishmestUseCase {
   final EstablismetRepository repository;
+
   EstablishmestUseCase({required this.repository});
 
   Future<int> addItem({required Establishment establishment}) async {
     return await repository.addItem(establishment: establishment);
+  }
+
+  Future<List<Establishment>> getEstabishmet() async {
+    return await repository.getEstablishment();
   }
 }
