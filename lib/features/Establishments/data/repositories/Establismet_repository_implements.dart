@@ -14,4 +14,10 @@ class EstablismetRepositoryImplements implements EstablismetRepository {
     final model = EstablishmentMapper.toModel(establishment);
     return await dataSource.addEstablishment(establishment: model);
   }
+
+  @override
+  Future<List<Establishment>> getEstablishment() async {
+    final result = await dataSource.getEstablishments();
+    return result.map((model) => EstablishmentMapper.toEntity(model)).toList();
+  }
 }
