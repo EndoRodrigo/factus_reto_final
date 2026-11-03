@@ -2,4 +2,5 @@ import 'package:factus_reto_final/features/Establishments/domain/entities/establ
 
 abstract class EstablismetRepository {
   Future<int> addItem({ required Establishment establishment });
+  Future<List<Establishment>> getEstablishment();
 }
