@@ -7,7 +7,19 @@ import 'establishmest_state.dart';
 class EstablistmeNotifier extends Notifier<EstablishmestState> {
   @override
   EstablishmestState build() {
+    Future.microtask(() => loadEstablishments());
     return const EstablishmestState();
+  }
+
+  Future<void> loadEstablishments() async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final useCase = ref.read(stablishmentsUseCaseProvider);
+      final items = await useCase.getEstabishmet();
+      state = state.copyWith(isLoading: false, establishments: items);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
   }
 
   Future<bool> createEstablishment({required Establishment establishment}) async {
@@ -16,7 +28,7 @@ class EstablistmeNotifier extends Notifier<EstablishmestState> {
     try {
       final useCase = ref.read(stablishmentsUseCaseProvider);
       await useCase.addItem(establishment: establishment);
-      state = state.copyWith(isLoading: false);
+      await loadEstablishments();
       return true;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
