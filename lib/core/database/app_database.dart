@@ -13,7 +13,12 @@ class AppDatabase {
   Future<Database> _initDataDabe() async {
     final dataBasePath = await getDatabasesPath();
     final path = join(dataBasePath, 'factus.db');
-    return await openDatabase(path, version: 2, onUpgrade: _onUpgrade, onCreate: _onCreate);
+    return await openDatabase(
+      path,
+      version: 4,
+      onUpgrade: _onUpgrade,
+      onCreate: _onCreate,
+    );
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -30,7 +35,7 @@ class AppDatabase {
         createdAt TEXT NOT NULL,
         updatedAt TEXT
       );
-      ''');
+    ''');
 
     await db.execute('''
       CREATE TABLE establishment (
@@ -46,24 +51,68 @@ class AppDatabase {
         updatedAt TEXT
       );
     ''');
+
+    await db.execute('''
+      CREATE TABLE customers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        identification TEXT NOT NULL UNIQUE,
+        dv TEXT,
+        company TEXT,
+        trade_name TEXT,
+        names TEXT NOT NULL,
+        address TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        legal_organization_id TEXT NOT NULL DEFAULT '2',
+        tribute_id TEXT NOT NULL DEFAULT '21',
+        identification_document_id INTEGER NOT NULL DEFAULT 3,
+        municipality_id TEXT NOT NULL,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT
+      );
+    ''');
   }
 
-  //Implementacion de cambios en la base de datos: _onUpgrade
+  // Implementacion de cambios en la base de datos: _onUpgrade
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await db.execute(
-        'CREATE TABLE establishment '
-            '(id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'name TEXT NOT NULL, '
-            'nit TEXT NOT NULL UNIQUE, '
-            'email TEXT NOT NULL UNIQUE, '
-            'phone TEXT NOT NULL UNIQUE, '
-            'address TEXT NOT NULL, '
-            'municipalityCode TEXT NOT NULL, '
-            'municipalityName TEXT NOT NULL, '
-            'createdAt TEXT NOT NULL, '
-            'updatedAt TEXT)',
-      );
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS establishment (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          nit TEXT NOT NULL UNIQUE,
+          email TEXT NOT NULL UNIQUE,
+          phone TEXT NOT NULL UNIQUE,
+          address TEXT NOT NULL,
+          municipalityCode TEXT NOT NULL,
+          municipalityName TEXT NOT NULL,
+          createdAt TEXT NOT NULL,
+          updatedAt TEXT
+        );
+      ''');
+    }
+
+    if (oldVersion < 4) {
+      await db.execute('DROP TABLE IF EXISTS customers;');
+      await db.execute('''
+        CREATE TABLE customers (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          identification TEXT NOT NULL UNIQUE,
+          dv TEXT,
+          company TEXT,
+          trade_name TEXT,
+          names TEXT NOT NULL,
+          address TEXT NOT NULL,
+          email TEXT NOT NULL,
+          phone TEXT NOT NULL,
+          legal_organization_id TEXT NOT NULL DEFAULT '2',
+          tribute_id TEXT NOT NULL DEFAULT '21',
+          identification_document_id INTEGER NOT NULL DEFAULT 3,
+          municipality_id TEXT NOT NULL,
+          createdAt TEXT NOT NULL,
+          updatedAt TEXT
+        );
+      ''');
     }
   }
 

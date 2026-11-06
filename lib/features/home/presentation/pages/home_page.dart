@@ -1,6 +1,6 @@
+import 'package:factus_reto_final/features/customer/presentation/pages/customer_page.dart';
 import 'package:factus_reto_final/features/home/presentation/widgets/menu_app_bar.dart';
 import 'package:factus_reto_final/features/home/presentation/widgets/menu_nevegation_bar.dart';
-import 'package:factus_reto_final/features/product/presentation/pages/item_from_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../product/presentation/pages/item_page.dart';
@@ -20,12 +20,13 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> pages = const [
     _HomeDashboard(),
     ItemPage(),
+    CustomerPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MenuAppBar(),
+      appBar: const MenuAppBar(),
       body: pages[indexMenu],
       bottomNavigationBar: MenuNevegationBar(
         indexMenu: indexMenu,
@@ -148,6 +149,23 @@ class _HomeDashboard extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ItemPage(),
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(height: 12),
+
+          // Clientes
+          ActionCard(
+            icon: Icons.people_alt_outlined,
+            title: 'Gestionar clientes',
+            subtitle: 'Registra y administra tus clientes',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CustomerPage(),
                 ),
               );
             },

@@ -4,7 +4,11 @@ class MenuNevegationBar extends StatefulWidget {
   final int indexMenu;
   final ValueChanged<int> onIndexChanged;
 
-  const MenuNevegationBar({super.key, required this.indexMenu, required this.onIndexChanged});
+  const MenuNevegationBar({
+    super.key,
+    required this.indexMenu,
+    required this.onIndexChanged,
+  });
 
   @override
   State<MenuNevegationBar> createState() => _MenuNevegationBarState();
@@ -13,13 +17,13 @@ class MenuNevegationBar extends StatefulWidget {
 class _MenuNevegationBarState extends State<MenuNevegationBar> {
   @override
   Widget build(BuildContext context) {
-
     return NavigationBar(
       selectedIndex: widget.indexMenu,
       onDestinationSelected: widget.onIndexChanged,
       destinations: const <Widget>[
         _CustomeNavegation(icon: Icons.home, label: 'Home'),
         _CustomeNavegation(icon: Icons.inventory_2_outlined, label: 'Productos'),
+        _CustomeNavegation(icon: Icons.people_outline, label: 'Clientes'),
       ],
     );
   }
