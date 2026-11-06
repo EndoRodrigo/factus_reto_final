@@ -28,6 +28,26 @@ class _EstablistmestFormPagesState
   final _municipalityNameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await ref.read(establishmentNotifierProvider.notifier).loadEstablishments();
+      if (!mounted) return;
+      final state = ref.read(establishmentNotifierProvider);
+      if (state.establishments.isNotEmpty) {
+        final current = state.establishments.first;
+        _nameController.text = current.name;
+        _nitController.text = current.nit;
+        _emailController.text = current.email;
+        _phoneController.text = current.phone;
+        _addressController.text = current.address;
+        _municipalityCodeController.text = current.municipalityCode;
+        _municipalityNameController.text = current.municipalityName;
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _nitController.dispose();
@@ -43,13 +63,16 @@ class _EstablistmestFormPagesState
   Widget build(BuildContext context) {
     final state = ref.watch(establishmentNotifierProvider);
     final isEdit = state.establishments.isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           isEdit ? 'Editar Establecimiento' : 'Nuevo Establecimiento',
         ),
       ),
-      body: _buildForm(state),
+      body: state.isLoading && state.establishments.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : _buildForm(state),
     );
   }
 
@@ -114,7 +137,11 @@ class _EstablistmestFormPagesState
       return;
     }
 
+    final currentEstablishment =
+        ref.read(establishmentNotifierProvider).establishments.firstOrNull;
+
     final establishment = Establishment(
+      id: currentEstablishment?.id,
       name: _nameController.text.trim(),
       nit: _nitController.text.trim(),
       email: _emailController.text.trim(),
@@ -122,7 +149,8 @@ class _EstablistmestFormPagesState
       address: _addressController.text.trim(),
       municipalityCode: _municipalityCodeController.text.trim(),
       municipalityName: _municipalityNameController.text.trim(),
-      createdAt: DateTime.now().toIso8601String(),
+      createdAt: currentEstablishment?.createdAt ??
+          DateTime.now().toIso8601String(),
     );
 
     final notifier = ref.read(establishmentNotifierProvider.notifier);
