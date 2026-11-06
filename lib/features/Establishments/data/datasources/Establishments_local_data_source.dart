@@ -1,3 +1,5 @@
+import 'package:sqflite/sqflite.dart';
+
 import '../../../../core/database/app_database.dart';
 import '../models/Establismet_model.dart';
 
@@ -10,7 +12,11 @@ class EstablishmentsLocalDataSource {
     required EstablismetModel establishment,
   }) async {
     final db = await appDatabase.database;
-    return await db.insert('establishment', establishment.toMap());
+    return await db.insert(
+      'establishment',
+      establishment.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<EstablismetModel>> getEstablishments() async {
