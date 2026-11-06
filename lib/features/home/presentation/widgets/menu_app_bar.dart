@@ -1,6 +1,6 @@
+import 'package:factus_reto_final/features/Establishments/presentation/pages/establistmest_form_pages.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Establishments/presentation/pages/establithmet_pages.dart';
 
 class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -35,7 +35,7 @@ class MenuAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EstablithmetPages()),
+                  MaterialPageRoute(builder: (context) => const EstablistmestFormPages()),
                 );
               }, icon: const Icon(Icons.person),
             ),
